@@ -1,0 +1,44 @@
+body {
+    background-color: #091921;
+    color: lightgray;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    text-align: center;
+    border: 2px solid gray;
+    height: 50px;
+    width: 50px;
+}
+
+tr:nth-of-type(3n):not(tr:nth-of-type(9)) {
+    border-bottom: 3px solid white;
+}
+
+td:nth-of-type(3n):not(td:nth-of-type(9)) {
+    border-right: 3px solid white;
+}
+
+input[type="text"] {
+    box-sizing: border-box;
+    text-align: center;
+    border: none;
+    color: white;
+    background: transparent;
+    height: 100%;
+    width: 100%;
+}
+
+button {
+    border: none;
+    height: 100%;
+    width: 100%;
+}
