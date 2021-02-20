@@ -4,8 +4,10 @@ body {
 }
 
 .container {
+    /*border: white 1px solid;*/
     display: flex;
     justify-content: center;
+    margin-bottom: 30px;
 }
 
 table {
@@ -28,6 +30,7 @@ td:nth-of-type(3n):not(td:nth-of-type(9)) {
 }
 
 input[type="text"] {
+    font-size: x-large;
     box-sizing: border-box;
     text-align: center;
     border: none;
@@ -37,8 +40,8 @@ input[type="text"] {
     width: 100%;
 }
 
-button {
-    border: none;
-    height: 100%;
-    width: 100%;
+#solve-button {
+    background: seagreen;
+    height: 40px;
+    width: 25%;
 }
