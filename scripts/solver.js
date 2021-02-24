@@ -1,13 +1,13 @@
 const testBoard = [
-    [1,2,3,4,5,6,7,8,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]
+    [4, 7, 9, 6, 5, 1, 3, 2, 0],
+    [0, 0, 3, 0, 4, 0, 9, 6, 0],
+    [5, 2, 0, 0, 8, 9, 0, 1, 7],
+    [0, 6, 1, 0, 7, 0, 5, 4, 0],
+    [2, 9, 7, 4, 3, 0, 1, 8, 6],
+    [0, 0, 5, 8, 1, 0, 0, 7, 0],
+    [0, 3, 2, 1, 6, 0, 0, 0, 4],
+    [0, 0, 8, 5, 0, 0, 0, 3, 2],
+    [0, 0, 0, 0, 2, 3, 8, 9, 0]
 ]
 
 /*
@@ -44,10 +44,22 @@ function getGameBoard() {
     return board;
 }
 
+function getEmptyPosition(gameBoard) {
+    for (let row = 0; row < gameBoard.length; row++) {
+        for (let column = 0; column < gameBoard[row].length; column++) {
+            if (gameBoard[row][column] === 0) {
+                return [row, column];
+            }
+        }
+    }
+    return null;
+}
+
+
 /*
     This method is the validator. It will check if a number is valid at any given position on the board.
  */
-function isValid (gameBoard, value, positionArray) {
+function isValid(gameBoard, value, positionArray) {
     const boardSize = gameBoard.length;
 
     //Checking if it's valid given the row.
@@ -65,8 +77,8 @@ function isValid (gameBoard, value, positionArray) {
     }
 
     //Checking the 3x3 grid
-    const gridPositionX = Math.floor(positionArray[0]/3);
-    const gridPositionY = Math.floor(positionArray[1]/3);
+    const gridPositionX = Math.floor(positionArray[0] / 3);
+    const gridPositionY = Math.floor(positionArray[1] / 3);
     for (let row = (gridPositionX * 3); row < (gridPositionX * 3) + 3; row++) {
         for (let column = (gridPositionY * 3); column < (gridPositionY * 3) + 3; column++) {
             if ((gameBoard[row][column] === value) && (row !== positionArray[0]) && (column !== positionArray[1])) {
@@ -76,4 +88,28 @@ function isValid (gameBoard, value, positionArray) {
     }
 
     return true;
+}
+
+function solveGameBoard(gameBoard) {
+    /*
+        base case of the algorithm
+        if there are no more empty spots left on the game board
+        then it is solved.
+     */
+    let emptyPosition = getEmptyPosition(gameBoard);
+    if (emptyPosition === null) {
+        return true; //break out of recursion
+    }
+
+    for (let value = 1; value < 10; value++) {
+        if (isValid(gameBoard, value, emptyPosition) === true) {
+            gameBoard[emptyPosition[0]][emptyPosition[1]] = value;
+            if (solveGameBoard(gameBoard) === true) {
+                return true;
+            }
+            gameBoard[emptyPosition[0]][emptyPosition[1]] = 0;
+        }
+    }
+    // console.dir(gameBoard)
+    return gameBoard;
 }
