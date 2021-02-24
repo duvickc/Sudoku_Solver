@@ -7,7 +7,7 @@ const testBoard = [
     [0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0]
 ]
 
 /*
@@ -45,23 +45,35 @@ function getGameBoard() {
 }
 
 /*
-    This method will be the validator. It will check if a number is valid at any given position on the board.
+    This method is the validator. It will check if a number is valid at any given position on the board.
  */
 function isValid (gameBoard, value, positionArray) {
     const boardSize = gameBoard.length;
 
-    //Checking if its valid given the row.
-    //need to debug
+    //Checking if it's valid given the row.
     for (let index = 0; index < boardSize; index++) {
-        console.log(`[${[positionArray[0]]}][${index}] = ` + (gameBoard[positionArray[0][index]]));
-        if ((gameBoard[positionArray[0][index]] === value) && (index !== positionArray[1])) {
+        if ((gameBoard[positionArray[0]][index] === value) && (index !== positionArray[1])) {
             return false;
         }
     }
 
+    //Checking if it's valid given the column.
+    for (let index = 0; index < boardSize; index++) {
+        if ((gameBoard[index][positionArray[1]] === value) && (index !== positionArray[0])) {
+            return false;
+        }
+    }
 
+    //Checking the 3x3 grid
+    const gridPositionX = Math.floor(positionArray[0]/3);
+    const gridPositionY = Math.floor(positionArray[1]/3);
+    for (let row = (gridPositionX * 3); row < (gridPositionX * 3) + 3; row++) {
+        for (let column = (gridPositionY * 3); column < (gridPositionY * 3) + 3; column++) {
+            if ((gameBoard[row][column] === value) && (row !== positionArray[0]) && (column !== positionArray[1])) {
+                return false;
+            }
+        }
+    }
 
     return true;
 }
-let array = [0,8]
-isValid(testBoard, 8, array);
