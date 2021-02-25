@@ -1,3 +1,4 @@
+const arrayOfInputs = getInputBoxes();
 const testBoard = [
     [4, 7, 9, 6, 5, 1, 3, 2, 0],
     [0, 0, 3, 0, 4, 0, 9, 6, 0],
@@ -8,7 +9,8 @@ const testBoard = [
     [0, 3, 2, 1, 6, 0, 0, 0, 4],
     [0, 0, 8, 5, 0, 0, 0, 3, 2],
     [0, 0, 0, 0, 2, 3, 8, 9, 0]
-]
+];
+let enableSolveButton = true;
 
 /**
  * This method gets the input values from the DOM and turns it into a array.
@@ -136,13 +138,21 @@ function solveGameBoard(gameBoard) {
     return false;
 }
 
+/**
+ * When solve button is clicked this listener updates the page
+ * with the solved game board.
+ */
 const solveButton = document.querySelector('#solve-button')
 solveButton.addEventListener('click', ()=> {
-    let board = getGameBoard();
-    solveGameBoard(board);
-    updatePage(board);
-    console.dir(board);
-})
+    if (enableSolveButton) {
+        let board = getGameBoard();
+        solveGameBoard(board);
+        updatePage(board);
+        console.dir(board);
+    } else {
+        alert("You must enter a valid Sudoku board.");
+    }
+});
 
 const updatePage = (board) => {
     const arrayOfInputs = getInputBoxes();
@@ -155,3 +165,39 @@ const updatePage = (board) => {
         }
     }
 }
+
+/**
+ * This clears the the board
+ */
+const clearButton = document.querySelector('#clear-button');
+clearButton.addEventListener('click', () => {
+    for (let row = 0; row < arrayOfInputs.length; row++) {
+        for (let column = 0; column < arrayOfInputs[row].length; column++) {
+            arrayOfInputs[row][column].value = "";
+            arrayOfInputs[row][column].classList.remove("solved");
+            arrayOfInputs[row][column].classList.remove("bad-input");
+            enableSolveButton = true;
+        }
+    }
+});
+
+/**
+ * Adding some invalid input checking
+ */
+function addInvalidListener() {
+    const regex = /[1-9]/
+    for (let row = 0; row < arrayOfInputs.length; row++) {
+        for (let column = 0; column < arrayOfInputs[row].length; column++) {
+            arrayOfInputs[row][column].addEventListener('input', () => {
+                if (regex.test(arrayOfInputs[row][column].value) === false && arrayOfInputs[row][column].value !== "") {
+                    arrayOfInputs[row][column].classList.add('bad-input');
+                    enableSolveButton = false;
+                } else {
+                    arrayOfInputs[row][column].classList.remove('bad-input');
+                    enableSolveButton = true;
+                }
+            })
+        }
+    }
+}
+addInvalidListener();
