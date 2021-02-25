@@ -29,13 +29,13 @@ td:nth-of-type(3n):not(td:nth-of-type(9)) {
     border-right: 3px solid white;
 }
 
-input[type="text"] {
+input {
     font-size: x-large;
     box-sizing: border-box;
     text-align: center;
     border: none;
     color: white;
-    background: transparent;
+    background: none;
     height: 100%;
     width: 100%;
 }
@@ -44,4 +44,8 @@ input[type="text"] {
     background: seagreen;
     height: 40px;
     width: 25%;
+}
+
+.solved {
+    background-color: rgba(41, 119, 39, .8);
 }
