@@ -10,7 +10,6 @@ const testBoard = [
     [0, 0, 8, 5, 0, 0, 0, 3, 2],
     [0, 0, 0, 0, 2, 3, 8, 9, 0]
 ];
-let enableSolveButton = true;
 
 /**
  * This method gets the input values from the DOM and turns it into a array.
@@ -129,13 +128,38 @@ function solveGameBoard(gameBoard) {
     for (let value = 1; value < 10; value++) {
         if (isValid(gameBoard, value, emptyPosition) === true) {
             gameBoard[emptyPosition[0]][emptyPosition[1]] = value; //Sets to a valid number
+            arrayOfInputs[emptyPosition[0]][emptyPosition[1]].value = value;
+            // arrayOfInputs[emptyPosition[0]][emptyPosition[1]].classList.add('solved');
             if (solveGameBoard(gameBoard) === true) { //recursive call to solve board
                 return true;
             }
             gameBoard[emptyPosition[0]][emptyPosition[1]] = 0;
+            arrayOfInputs[emptyPosition[0]][emptyPosition[1]].value = 0;
+            // arrayOfInputs[emptyPosition[0]][emptyPosition[1]].classList.remove('solved');
         }
     }
-    return false;
+    return gameBoard;
+}
+
+/**
+ * This method will check if the board that the user provided is valid and solvable.
+ * @returns {boolean}
+ */
+function isValidBoard(board) {
+    //Checking if any boxes are invalid by checking the "bad-input" class
+    //bad input is input that isn't 1-9
+    for (let row = 0; row < arrayOfInputs.length; row++) {
+        for (let column = 0; column < arrayOfInputs[row].length; column++) {
+            if (arrayOfInputs[row][column].classList.contains("bad-input")) {
+                return false;
+            }
+            //Ensuring the board is a truly solvable by checking if each spot is valid
+            if (board[row][column] !== 0 && isValid(board, board[row][column], [row, column]) === false) {
+                return false
+            }
+        }
+    }
+    return true;
 }
 
 /**
@@ -144,9 +168,9 @@ function solveGameBoard(gameBoard) {
  */
 const solveButton = document.querySelector('#solve-button')
 solveButton.addEventListener('click', ()=> {
-    if (enableSolveButton) {
-        let board = getGameBoard();
-        solveGameBoard(board);
+    let board = getGameBoard();
+    if (isValidBoard(board)) {
+        board = solveGameBoard(board);
         updatePage(board);
         console.dir(board);
     } else {
@@ -176,7 +200,6 @@ clearButton.addEventListener('click', () => {
             arrayOfInputs[row][column].value = "";
             arrayOfInputs[row][column].classList.remove("solved");
             arrayOfInputs[row][column].classList.remove("bad-input");
-            enableSolveButton = true;
         }
     }
 });
@@ -191,13 +214,16 @@ function addInvalidListener() {
             arrayOfInputs[row][column].addEventListener('input', () => {
                 if (regex.test(arrayOfInputs[row][column].value) === false && arrayOfInputs[row][column].value !== "") {
                     arrayOfInputs[row][column].classList.add('bad-input');
-                    enableSolveButton = false;
                 } else {
                     arrayOfInputs[row][column].classList.remove('bad-input');
-                    enableSolveButton = true;
                 }
             })
         }
     }
 }
 addInvalidListener();
+
+//for a later feature
+// function sleep(ms) {
+//     return new Promise(resolve => setTimeout(resolve, ms));
+// }
