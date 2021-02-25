@@ -140,14 +140,15 @@ const solveButton = document.querySelector('#solve-button')
 solveButton.addEventListener('click', ()=> {
     let board = getGameBoard();
     solveGameBoard(board);
-    updatePage(board)
+    updatePage(board);
+    console.dir(board);
 })
 
 const updatePage = (board) => {
     const arrayOfInputs = getInputBoxes();
     for (let row = 0; row < arrayOfInputs.length; row++) {
         for (let column = 0; column < arrayOfInputs[row].length; column++) {
-            if (arrayOfInputs[row][column].value !== "") {
+            if (arrayOfInputs[row][column].value === "") {
                 arrayOfInputs[row][column].value = board[row][column];
                 arrayOfInputs[row][column].classList.add("solved");
             }
