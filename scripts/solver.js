@@ -10,21 +10,10 @@ const testBoard = [
     [0, 0, 0, 0, 2, 3, 8, 9, 0]
 ]
 
-/*
-    This method gets the input values from the DOM and turns it into a array.
-    The game board is represented as a 2D Array
-    here is an example:
-    [
-        [1, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 2, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 3, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 4, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 5, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 6, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 7, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 8, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 9]
-    ]
+/**
+ * This method gets the input values from the DOM and turns it into a array.
+ * The game board is represented as a 2D Array.
+ * @returns {[]}
  */
 function getGameBoard() {
     const inputs = document.querySelectorAll("input");
@@ -44,6 +33,30 @@ function getGameBoard() {
     return board;
 }
 
+/**
+ * Gets all of the input boxes. This is formatted in the same way as the game board
+ * for ease of indexing.
+ * @returns {[]}
+ */
+function getInputBoxes() {
+    const inputs = document.querySelectorAll("input");
+    const inputsArray = [];
+    let row = [];
+    for (let i = 0; i < inputs.length; i++) {
+        row.push(inputs[i]);
+        if (((row.length % 9) === 0) && (i !== 0)) {
+            inputsArray.push(row);
+            row = [];
+        }
+    }
+    return inputsArray;
+}
+
+/**
+ * Gets an empty position on the board and returns it
+ * @param gameBoard
+ * @returns {null|number[]}
+ */
 function getEmptyPosition(gameBoard) {
     for (let row = 0; row < gameBoard.length; row++) {
         for (let column = 0; column < gameBoard[row].length; column++) {
@@ -56,8 +69,12 @@ function getEmptyPosition(gameBoard) {
 }
 
 
-/*
-    This method is the validator. It will check if a number is valid at any given position on the board.
+/**
+ * This method is the validator. It will check if a number is valid at any given position on the board.
+ * @param gameBoard
+ * @param value
+ * @param positionArray
+ * @returns {boolean}
  */
 function isValid(gameBoard, value, positionArray) {
     const boardSize = gameBoard.length;
@@ -90,6 +107,12 @@ function isValid(gameBoard, value, positionArray) {
     return true;
 }
 
+/**
+ * This is the method that does the work for solving the board. This method uses a recursive backtracking
+ * algorithm to complete the board.
+ * @param gameBoard
+ * @returns {boolean}
+ */
 function solveGameBoard(gameBoard) {
     /*
         base case of the algorithm
@@ -103,13 +126,31 @@ function solveGameBoard(gameBoard) {
 
     for (let value = 1; value < 10; value++) {
         if (isValid(gameBoard, value, emptyPosition) === true) {
-            gameBoard[emptyPosition[0]][emptyPosition[1]] = value;
-            if (solveGameBoard(gameBoard) === true) {
+            gameBoard[emptyPosition[0]][emptyPosition[1]] = value; //Sets to a valid number
+            if (solveGameBoard(gameBoard) === true) { //recursive call to solve board
                 return true;
             }
             gameBoard[emptyPosition[0]][emptyPosition[1]] = 0;
         }
     }
-    // console.dir(gameBoard)
-    return gameBoard;
+    return false;
+}
+
+const solveButton = document.querySelector('#solve-button')
+solveButton.addEventListener('click', ()=> {
+    let board = getGameBoard();
+    solveGameBoard(board);
+    updatePage(board)
+})
+
+const updatePage = (board) => {
+    const arrayOfInputs = getInputBoxes();
+    for (let row = 0; row < arrayOfInputs.length; row++) {
+        for (let column = 0; column < arrayOfInputs[row].length; column++) {
+            if (arrayOfInputs[row][column].value !== "") {
+                arrayOfInputs[row][column].value = board[row][column];
+                arrayOfInputs[row][column].classList.add("solved");
+            }
+        }
+    }
 }
