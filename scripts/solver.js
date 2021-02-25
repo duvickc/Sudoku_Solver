@@ -128,13 +128,13 @@ function solveGameBoard(gameBoard) {
     for (let value = 1; value < 10; value++) {
         if (isValid(gameBoard, value, emptyPosition) === true) {
             gameBoard[emptyPosition[0]][emptyPosition[1]] = value; //Sets to a valid number
-            arrayOfInputs[emptyPosition[0]][emptyPosition[1]].value = value;
+            // arrayOfInputs[emptyPosition[0]][emptyPosition[1]].value = value;
             // arrayOfInputs[emptyPosition[0]][emptyPosition[1]].classList.add('solved');
             if (solveGameBoard(gameBoard) === true) { //recursive call to solve board
                 return true;
             }
             gameBoard[emptyPosition[0]][emptyPosition[1]] = 0;
-            arrayOfInputs[emptyPosition[0]][emptyPosition[1]].value = 0;
+            // arrayOfInputs[emptyPosition[0]][emptyPosition[1]].value = 0;
             // arrayOfInputs[emptyPosition[0]][emptyPosition[1]].classList.remove('solved');
         }
     }
@@ -170,7 +170,7 @@ const solveButton = document.querySelector('#solve-button')
 solveButton.addEventListener('click', ()=> {
     let board = getGameBoard();
     if (isValidBoard(board)) {
-        board = solveGameBoard(board);
+        solveGameBoard(board);
         updatePage(board);
         console.dir(board);
     } else {
